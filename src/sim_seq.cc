@@ -73,8 +73,6 @@ twosubtrees  split_tree(const string & tree) {
 };
 
 vector<unsigned> simulate_branch(const vector<unsigned> & rootseq,F84 f84) {
-  Rcpp::RNGScope scope;
-
   vector<unsigned> newseq(rootseq);
   const unsigned n=rootseq.size();
   //poisson_distribution<> randtv(n*f84.t*f84.tv_rate), randti(n*f84.t*f84.ti_rate);
@@ -125,7 +123,7 @@ vector<unsigned> simulate_branch(const vector<unsigned> & rootseq,F84 f84) {
           }
           break;
         default:
-          cerr << "unknown nucleotide in vector<unsigned> simulate_branch(const vector<unsigned>&,F84)\n";
+          Rcpp::stop("unknown nucleotide in vector<unsigned> simulate_branch(const vector<unsigned>&,F84)\n");
         break;
         }
         mutated[site]=true;
@@ -167,7 +165,7 @@ vector<unsigned> simulate_branch(const vector<unsigned> & rootseq,F84 f84) {
         }
         break;
       default:
-        cerr << "unknown nucleotide in vector<unsigned> simulate_branch(const vector<unsigned>&,F84)\n";
+        Rcpp::stop("unknown nucleotide in vector<unsigned> simulate_branch(const vector<unsigned>&,F84)\n");
       break;
       }
     }
@@ -240,6 +238,8 @@ pair<vector<string>,vector<vector<unsigned> > > simulate_sequences_F84(string tr
 
 // [[Rcpp::export]]
 Rcpp::NumericVector sim_seq(const Rcpp::CharacterVector trees) {
+  Rcpp::RNGScope scope;
+
   std::string line, tree;
   size_t length, digits;
   pair<vector<string>, vector<vector<unsigned> > > p;
@@ -250,7 +250,7 @@ Rcpp::NumericVector sim_seq(const Rcpp::CharacterVector trees) {
     length = std::atoi(line.substr(1, digits).c_str());
     tree = line.substr(digits+2, std::string::npos);
 
-    p = simulate_sequences_F84(tree, length, 0.2, 0.3, 0.2, 0.0005, 0.0005, false);
+    p = simulate_sequences_F84(tree, length, 0.2, 0.3, 0.2, 0.01, 0.01, false);
     for(unsigned i=0; i<p.first.size(); ++i) {
       Rcpp::Rcout << p.first[i] << "  ";
       for(unsigned j=0; j<p.second[i].size(); ++j) {
