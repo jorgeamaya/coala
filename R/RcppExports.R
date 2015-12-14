@@ -94,6 +94,10 @@ set_trio_locus <- function(segsites, trio_locus) {
     .Call('coala_set_trio_locus', PACKAGE = 'coala', segsites, trio_locus)
 }
 
+sim_seq <- function(trees) {
+    .Call('coala_sim_seq', PACKAGE = 'coala', trees)
+}
+
 calc_four_gamete_stat <- function(seg_sites_list, individuals, locus_length) {
     .Call('coala_calc_four_gamete_stat', PACKAGE = 'coala', seg_sites_list, individuals, locus_length)
 }

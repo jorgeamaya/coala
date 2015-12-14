@@ -130,6 +130,17 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// sim_seq
+Rcpp::NumericVector sim_seq(const Rcpp::CharacterVector trees);
+RcppExport SEXP coala_sim_seq(SEXP treesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const Rcpp::CharacterVector >::type trees(treesSEXP);
+    __result = Rcpp::wrap(sim_seq(trees));
+    return __result;
+END_RCPP
+}
 // calc_four_gamete_stat
 NumericMatrix calc_four_gamete_stat(const List seg_sites_list, const IntegerVector individuals, const NumericMatrix locus_length);
 RcppExport SEXP coala_calc_four_gamete_stat(SEXP seg_sites_listSEXP, SEXP individualsSEXP, SEXP locus_lengthSEXP) {
