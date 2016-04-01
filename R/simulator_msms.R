@@ -97,6 +97,7 @@ msms_class <- R6Class("Msms", inherit = simulator_class,
       })
 
       # Parse the output and calculate summary statistics
+      message("Parsing msms output...")
       if (requires_segsites(model) || requires_trees(model)) {
         output <- parse_ms_output(files, #nolint
                                   get_sample_size(model, for_sim = TRUE),
@@ -104,13 +105,16 @@ msms_class <- R6Class("Msms", inherit = simulator_class,
       } else {
         output <- list(seg_sites = NULL, trees = NULL)
       }
+      message("Done parsing msms output...")
 
       cmds <- lapply(sim_cmds, function(cmd) {
         paste("msms", sample_size, cmd[, 1], cmd[, 2])
       })
 
+      message("Calculating summary statistics...")
       sum_stats <- calc_sumstats_from_sim(output$segsites, output$trees, files,
                                           model, parameters, cmds, self)
+      message("Done calculating summary statistics...")
 
       # Clean Up
       unlink(unlist(files))
