@@ -48,14 +48,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // generate_trio_trees
-List generate_trio_trees(const List trees, const NumericMatrix llm);
-RcppExport SEXP coala_generate_trio_trees(SEXP treesSEXP, SEXP llmSEXP) {
+List generate_trio_trees(const List trees, const NumericMatrix llm, const std::string tmp_dir);
+RcppExport SEXP coala_generate_trio_trees(SEXP treesSEXP, SEXP llmSEXP, SEXP tmp_dirSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const List >::type trees(treesSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix >::type llm(llmSEXP);
-    __result = Rcpp::wrap(generate_trio_trees(trees, llm));
+    Rcpp::traits::input_parameter< const std::string >::type tmp_dir(tmp_dirSEXP);
+    __result = Rcpp::wrap(generate_trio_trees(trees, llm, tmp_dir));
     return __result;
 END_RCPP
 }

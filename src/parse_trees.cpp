@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <fstream>
+#include <string>
 
 using namespace Rcpp;
 
@@ -30,7 +31,8 @@ void addTree(const std::string &tree,
 
 // [[Rcpp::export]]
 List generate_trio_trees(const List trees,
-                         const NumericMatrix llm) {
+                         const NumericMatrix llm,
+                         const std::string tmp_dir) {
 
   CharacterVector locus_trees;
   std::string tree;
@@ -40,7 +42,9 @@ List generate_trio_trees(const List trees,
   List result = List(llm_n_row);
 
   for (size_t llm_row = 0; llm_row < llm_n_row; ++llm_row) {
-    CharacterVector left;
+    std::stringstream ss;
+    ss << tmp_dir << "/" << llm_row;
+    std::ofstream left(ss.str() + "_left.newick");
     CharacterVector middle;
     CharacterVector right;
 

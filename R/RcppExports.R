@@ -13,8 +13,8 @@ parse_seqgen_output <- function(output, individuals, locus_length, locus_number,
     .Call('coala_parse_seqgen_output', PACKAGE = 'coala', output, individuals, locus_length, locus_number, outgroup_size, calc_segsites)
 }
 
-generate_trio_trees <- function(trees, llm) {
-    .Call('coala_generate_trio_trees', PACKAGE = 'coala', trees, llm)
+generate_trio_trees <- function(trees, llm, tmp_dir) {
+    .Call('coala_generate_trio_trees', PACKAGE = 'coala', trees, llm, tmp_dir)
 }
 
 #' @describeIn segsites Creates segregating sites
