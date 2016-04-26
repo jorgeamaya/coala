@@ -17,19 +17,35 @@ variation_par_class <- R6Class("variation_par", inherit = parameter_class,
       expr
     }),
   public = list(
-    initialize = function(parameter, variance) {
+    initialize = function(parameter, variance, n_groups) {
       expr_mean <- private$add_parameter(parameter)
       expr_var <- private$add_parameter(variance)
       private$expr <- parse(text = paste0(private$func, "(", expr_mean,
-                                          ", ", expr_var, ")"))
+                                          ", ", expr_var,
+                                          ", ", n_groups, ")"))
     },
     get_base_par = function() private$base_par
   )
 )
 
 #' @importFrom stats rgamma
-variation <- function(mean, variance) {
-  rgamma(1, mean ^ 2 / variance, mean / variance)
+variation <- function(mean, variance, n_groups = NULL) {
+  gamma_shape <-  mean ^ 2 / variance
+  gamma_rate <- mean / variance
+  if (is.null(n_groups)) return(rgamma(1, gamma_shape, gamma_rate))
+
+  group_median_probs <- (1:n_groups * 2 - 1) / (2 * n_groups)
+  group_medians <- qgamma(group_median_probs, gamma_shape, gamma_rate)
+  group <- sample.int(n_groups, 1)
+  return(group_medians[group] * mean * n_groups / sum(group_medians))
+
+
+  #probs <- c(group - 1, group) / n_groups
+  #probs <- mean(probs)
+  probs[probs == 1.0] <- .9999
+  interval <- qgamma(probs, gamma_shape, gamma_rate)
+  1 / (n_groups * diff(interval))
+  #interval
 }
 
 is.par_variation <- function(object) inherits(object, "variation_par")
@@ -55,6 +71,6 @@ is.par_variation <- function(object) inherits(object, "variation_par")
 #'   feat_mutation(par_variation(par_const(5), 10)) +
 #'   sumstat_nucleotide_div()
 #' simulate(model)
-par_variation <- function(par, variance) {
-  variation_par_class$new(par, variance)
+par_variation <- function(par, variance, n_groups = NULL) {
+  variation_par_class$new(par, variance, n_groups)
 }

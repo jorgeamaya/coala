@@ -46,3 +46,12 @@ test_that("Adding a parameter with variation to a model works", {
   expect_equal(get_parameter(model)[[2]]$get_name(), "y")
   expect_true(has_variation(model))
 })
+
+test_that("discretized gamma variation works", {
+  smpl <- replicate(10000, variation(5, 100, n_groups = 10))
+  print(mean(smpl))
+  print(var(smpl))
+  expect_equal(length(unique(smpl)), 10)
+  expect_true(abs(mean(smpl) - 5) < 0.25)
+  expect_true(abs(var(smpl) - 100) < 20)
+})
